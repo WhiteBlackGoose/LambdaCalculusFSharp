@@ -3,22 +3,6 @@
 open LambdaCalculus.Atoms
 open LambdaCalculus.Hierarchy
 open ResultBuilder
-        
-
-
-// 
-//    \x.x
-//    \x.x()
-//
-// 
-//
-//
-//
-// 
-//
-//
-//
-
 
 
 let rec parse s : Result<Expression, string> =
