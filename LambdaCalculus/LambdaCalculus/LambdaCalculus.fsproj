@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Atoms.fs" />
+    <Compile Include="OptionBuilder.fs" />
+    <Compile Include="Output.fs" />
+    <Compile Include="Parsing\Hierarchy.fs" />
+    <Compile Include="Parsing\Parsing.fs" />
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+
+</Project>
