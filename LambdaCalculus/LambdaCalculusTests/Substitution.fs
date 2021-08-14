@@ -7,7 +7,7 @@ open Xunit
 let assertSub s old _new expected =
     match (parse s, parse _new, parse expected) with
     | (Ok s, Ok _new, Ok expected) ->
-        let sub = s.Substitute old _new
+        let sub = substitute old _new s
         Assert.Equal(expected, sub)
     | _ ->
         Assert.False(true)
@@ -28,3 +28,11 @@ let ``Test substitute 3`` () =
 [<Fact>]
 let ``Test substitute 4`` () =
     assertSub @"(\y.y)y" 'y' "z" @"(\y.y)z"
+
+[<Fact>]
+let ``Test substitute 5`` () =
+    assertSub @"\x.y" 'y' "x" @"\z.x"
+
+[<Fact>]
+let ``Test substitute 6`` () =
+    assertSub @"\x.xy" 'y' "x" @"\z.zx"

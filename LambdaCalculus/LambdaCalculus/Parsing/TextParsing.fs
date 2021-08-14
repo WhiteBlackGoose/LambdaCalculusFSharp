@@ -3,7 +3,7 @@
 open LambdaCalculus.Atoms
 
 let (|ValidVariable|_|) (value : char) =
-    if "qwertyuiopasdfghjklzxcvbnm".Contains value then
+    if VariableAlphabet.Contains value then
         Some value
     else
         None

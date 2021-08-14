@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Utils.fs" />
     <Compile Include="Atoms.fs" />
-    <Compile Include="OptionBuilder.fs" />
     <Compile Include="Output.fs" />
     <Compile Include="Parsing\TextParsing.fs" />
     <Compile Include="Parsing\Parsing.fs" />

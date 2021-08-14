@@ -1,4 +1,4 @@
-﻿module ResultBuilder
+﻿module LambdaCalculus.Utils
 
 type ResultBuilder () =
     member this.Bind (m, f) =
@@ -12,3 +12,9 @@ type ResultBuilder () =
 
 
 let opt = ResultBuilder ()
+
+let rec listRemove elem list =
+    match list with
+    | [] -> []
+    | hd::tl when hd = elem -> tl
+    | hd::tl -> hd::listRemove elem tl

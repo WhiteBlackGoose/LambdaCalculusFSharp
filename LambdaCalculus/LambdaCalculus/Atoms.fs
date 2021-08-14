@@ -1,7 +1,9 @@
 ﻿module LambdaCalculus.Atoms
 
+open LambdaCalculus.Utils
 type Variable = char
 
+let VariableAlphabet = "xyzabcdefghijklmnopqrstuvw"
 
 type Expression =
     | Variable of Variable
@@ -9,10 +11,30 @@ type Expression =
     | Applied of Lambda : Expression * Argument : Expression
 
 
+let rec freeVariables = function
+    | Variable x -> [ x ]
+    | Lambda (y, body) ->
+        freeVariables body
+        |> listRemove y
+    | Applied (left, right) ->
+        List.append (freeVariables left) (freeVariables right)
+    
+let newVariable oldOnes =
+    VariableAlphabet
+    |> Seq.find (fun c -> List.contains c oldOnes |> not)
+
 let rec substitute x value expr =
     match expr with
     | Variable x' when x' = x -> value
-    | Lambda (y, body) when y <> x -> Lambda(y, substitute x value body)
+    | Lambda (x', body) when x' = x -> Lambda (x', body)
+    | Lambda (y, body) when y <> x ->
+        let valueFreeVars = freeVariables value
+        if List.contains y valueFreeVars then
+            let z = newVariable (List.append valueFreeVars (freeVariables body))
+            let newBody = substitute y (Variable z) body
+            Lambda(z, substitute x value newBody)
+        else
+            Lambda(y, substitute x value body)
     | Applied (lambda, argument) -> Applied(substitute x value lambda, substitute x value argument)
     | other -> other
 

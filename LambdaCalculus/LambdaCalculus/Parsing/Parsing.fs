@@ -2,7 +2,7 @@
 
 open LambdaCalculus.Atoms
 open LambdaCalculus.TextParsing
-open ResultBuilder
+open LambdaCalculus.Utils
 
 
 let rec parseInner s : Result<Expression, string> =

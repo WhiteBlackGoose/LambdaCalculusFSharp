@@ -1,7 +1,7 @@
 ﻿// Learn more about F# at http://docs.microsoft.com/dotnet/fsharp
 
 open System
-open ResultBuilder
+open LambdaCalculus.Utils
 open LambdaCalculus.Parsing
 open LambdaCalculus.Output
 open LambdaCalculus.Atoms
