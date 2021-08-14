@@ -1,0 +1,27 @@
+name: 'Tests'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+        
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+        include-prerelease: true
+        
+    - name: Run tests
+      run: |
+        cd LambdaCalculus/LambdaCalculusTests
+        dotnet test -c release
