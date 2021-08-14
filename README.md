@@ -10,8 +10,7 @@
     </i>
 </p>
 
-The 
-λ-calculus is, at heart, a simple notation for functions and application. The main ideas are applying a function to an argument and forming functions by abstraction. Despite its sparse syntax, the expressiveness and flexibility of the λ-calculus make it a cornucopia of logic and mathematics. [**(c)**](https://plato.stanford.edu/entries/lambda-calculus/)
+> The λ-calculus is, at heart, a simple notation for functions and application. The main ideas are applying a function to an argument and forming functions by abstraction. Despite its sparse syntax, the expressiveness and flexibility of the λ-calculus make it a cornucopia of logic and mathematics. [**(c)**](https://plato.stanford.edu/entries/lambda-calculus/)
 
 The library serves no production purpose and made exclusively out of academic interest. It has a [web app](https://whiteblackgoose.github.io/LambdaCalculusFSharp/) made for demonstration.
 
