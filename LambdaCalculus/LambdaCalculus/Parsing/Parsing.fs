@@ -99,5 +99,6 @@ and parseFlat s : Result<Expression * char list, string> =
 let parse (s : string) =
     s
     |> (fun s -> s.Replace("λ", "\\"))
+    |> (fun s -> s.Replace(" ", ""))    // spaces do not mean anything
     |> List.ofSeq
     |> parseInner
