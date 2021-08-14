@@ -1,0 +1,89 @@
+﻿@page "/"
+
+<style>
+.neat {
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 6px;
+    font-size: 12pt;
+}
+.submit-button:active {
+    background-color: white;
+}
+.submit-button {
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+</style>
+
+<h1>λ calculus calculator</h1>
+
+<p>
+    Welcome to lambda calculus evaluator.
+</p>
+
+
+
+<input class="neat input-box" @bind=@TextParse style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) Parse(); }" />
+<button class="neat submit-button" @onclick="Parse">Parse</button>
+<p>
+    @ResultParse
+</p>
+
+<br><br><br>
+
+<input class="neat input-box" @bind=@TextAlphaEquivalence1 style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
+<input class="neat input-box" @bind=@TextAlphaEquivalence2 style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
+<button class="neat submit-button" @onclick="AlphaEquivalence">α equivalence</button>
+<p>
+    @ResultAlphaEquivalence
+</p>
+
+<br><br><br>
+
+<input class="neat input-box" @bind=@TextBetaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
+<button class="neat submit-button" @onclick="BetaReduce">β reduction</button>
+<p>
+    @ResultBetaReduce
+</p>
+
+@using LambdaCalculus
+@code {
+    public string TextParse = @"(\x.xx)y";
+    public string ResultParse = "";
+    public void Parse()
+    {
+        var parsed = Parsing.parse(TextParse);
+        if (parsed.IsOk)
+            ResultParse = parsed.ResultValue.ToString();
+        else
+            ResultParse = $"Error: {parsed.ErrorValue}";
+    }
+
+    public string TextAlphaEquivalence1 = @"\x.xx";
+    public string TextAlphaEquivalence2 = @"\y.yy";
+    public string ResultAlphaEquivalence = "";
+    public void AlphaEquivalence()
+    {
+        var parsed1 = Parsing.parse(TextAlphaEquivalence1);
+        var parsed2 = Parsing.parse(TextAlphaEquivalence2);
+        if (parsed1.IsOk && parsed2.IsOk)
+            ResultAlphaEquivalence = Atoms.alphaEqual(parsed1.ResultValue, parsed2.ResultValue) ? "They're α-equivalent" : "They're not α-equivalent";
+        else if (parsed1.IsError)
+            ResultAlphaEquivalence = $"Error: {parsed1.ErrorValue}";
+        else
+            ResultAlphaEquivalence = $"Error: {parsed2.ErrorValue}";
+    }
+
+    public string TextBetaReduce = @"(\x.xx)(\y.y)z";
+    public string ResultBetaReduce = "";
+    public void BetaReduce()
+    {
+        var parsed = Parsing.parse(TextBetaReduce);
+        if (parsed.IsOk)
+            ResultBetaReduce = Output.sprintLambda(Atoms.betaReduce(parsed.ResultValue));
+        else
+            ResultBetaReduce = $"Error: {parsed.ErrorValue}";
+    }
+}
