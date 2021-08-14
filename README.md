@@ -17,3 +17,6 @@ Functions:
 - `betaReduce` performs beta-reduction, that is, simplification of an expression
 (starting from bottom, replaces parameters of lambdas in their bodies with the applied expressions)
 - `parse` parses an expression from the standard notation
+
+
+You can play with it on the [website](https://whiteblackgoose.github.io/LambdaCalculusFSharp/)
