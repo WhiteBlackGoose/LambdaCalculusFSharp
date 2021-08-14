@@ -117,11 +117,11 @@ body {
     public string ResultParse = "";
     public void Parse()
     {
-        // var parsed = Parsing.parse(TextParse);
-        // if (parsed.IsOk)
-        //     ResultParse = $"{Output.sprintLambda(parsed.ResultValue)}\n\n{parsed.ResultValue}";
-        // else
-        //     ResultParse = $"Error: {parsed.ErrorValue}";
+        var parsed = Parsing.parse(TextParse);
+        if (parsed.IsOk)
+            ResultParse = $"{Output.sprintLambda(parsed.ResultValue)}\n\n{parsed.ResultValue}";
+        else
+            ResultParse = $"Error: {parsed.ErrorValue}";
     }
 
     public string TextAlphaEquivalence1 = @"\x.xx";
@@ -129,25 +129,25 @@ body {
     public string ResultAlphaEquivalence = "";
     public void AlphaEquivalence()
     {
-        // var parsed1 = Parsing.parse(TextAlphaEquivalence1);
-        // var parsed2 = Parsing.parse(TextAlphaEquivalence2);
-        // if (parsed1.IsOk && parsed2.IsOk)
-        //     ResultAlphaEquivalence = Atoms.alphaEqual(parsed1.ResultValue, parsed2.ResultValue) ? "They're α-equivalent" : "They're not α-equivalent";
-        // else if (parsed1.IsError)
-        //     ResultAlphaEquivalence = $"Error: {parsed1.ErrorValue}";
-        // else
-        //     ResultAlphaEquivalence = $"Error: {parsed2.ErrorValue}";
+        var parsed1 = Parsing.parse(TextAlphaEquivalence1);
+        var parsed2 = Parsing.parse(TextAlphaEquivalence2);
+        if (parsed1.IsOk && parsed2.IsOk)
+            ResultAlphaEquivalence = Atoms.alphaEqual(parsed1.ResultValue, parsed2.ResultValue) ? "They're α-equivalent" : "They're not α-equivalent";
+        else if (parsed1.IsError)
+            ResultAlphaEquivalence = $"Error: {parsed1.ErrorValue}";
+        else
+            ResultAlphaEquivalence = $"Error: {parsed2.ErrorValue}";
     }
 
     public string TextBetaReduce = @"(\x.xx)(\y.y)z";
     public string ResultBetaReduce = "";
     public void BetaReduce()
     {
-        // var parsed = Parsing.parse(TextBetaReduce);
-        // if (parsed.IsOk)
-        //     ResultBetaReduce = Output.sprintLambda(Atoms.betaReduce(parsed.ResultValue));
-        // else
-        //     ResultBetaReduce = $"Error: {parsed.ErrorValue}";
+        var parsed = Parsing.parse(TextBetaReduce);
+        if (parsed.IsOk)
+            ResultBetaReduce = Output.sprintLambda(Atoms.betaReduce(parsed.ResultValue));
+        else
+            ResultBetaReduce = $"Error: {parsed.ErrorValue}";
     }
 
     public string TextSubstitution1 = "xxx";
@@ -156,19 +156,19 @@ body {
     public string ResultSubstitution = "";
     public void Substitute()
     {
-        // if (TextSubstitution2.Length is not 1)
-        //     ResultSubstitution = "Error: The second field should be a single-char variable.";
-        // else
-        // {
-        //     var x = TextSubstitution2[0];
-        //     var parsed1 = Parsing.parse(TextSubstitution1);
-        //     var parsed2 = Parsing.parse(TextSubstitution3);
-        //     if (parsed1.IsOk && parsed2.IsOk)
-        //         ResultSubstitution = Output.sprintLambda(Atoms.substitute(x, parsed2.ResultValue, parsed1.ResultValue));
-        //     else if (parsed1.IsError)
-        //         ResultSubstitution = $"Error: {parsed1.ErrorValue}";
-        //     else
-        //         ResultSubstitution = $"Error: {parsed2.ErrorValue}";
-        // }
+        if (TextSubstitution2.Length is not 1)
+            ResultSubstitution = "Error: The second field should be a single-char variable.";
+        else
+        {
+            var x = TextSubstitution2[0];
+            var parsed1 = Parsing.parse(TextSubstitution1);
+            var parsed2 = Parsing.parse(TextSubstitution3);
+            if (parsed1.IsOk && parsed2.IsOk)
+                ResultSubstitution = Output.sprintLambda(Atoms.substitute(x, parsed2.ResultValue, parsed1.ResultValue));
+            else if (parsed1.IsError)
+                ResultSubstitution = $"Error: {parsed1.ErrorValue}";
+            else
+                ResultSubstitution = $"Error: {parsed2.ErrorValue}";
+        }
     }
 }
