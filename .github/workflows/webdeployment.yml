@@ -20,7 +20,7 @@ jobs:
     - name: publish
       run: |
         cd LambdaCalculus/LambdaCalculusWeb
-        dotnet publish -c release
+        dotnet publish -c release --self-contained true
       
     - name: Change base-tag in index.html from / to the necessary
       run: sed -i 's/<base href="\/" \/>/<base href="\/LambdaCalculusFSharp\/" \/>/g' ./LambdaCalculus/LambdaCalculusWeb/bin/release/net6.0/publish/wwwroot/index.html
