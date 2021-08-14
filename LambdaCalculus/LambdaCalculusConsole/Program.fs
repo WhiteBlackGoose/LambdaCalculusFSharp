@@ -8,7 +8,7 @@ open LambdaCalculus.Atoms
 
 
 let res = opt {
-    let! (lambda) = parse (@"\xy.xy(\z.z)" |> List.ofSeq)
+    let! (lambda) = parse "x"
     return lambda
 }
 
@@ -22,5 +22,12 @@ match res with
     |> betaReduce
     |> sprintLambda
     |> printfn "%s"
+    (*
+    match betaReduce expr with
+    | None -> printfn "%s" "Can't be reduced"
+    | Some reduced ->
+        reduced
+        |> sprintLambda
+        |> printfn "%s"*)
 | Error error ->
     printfn "%s" error

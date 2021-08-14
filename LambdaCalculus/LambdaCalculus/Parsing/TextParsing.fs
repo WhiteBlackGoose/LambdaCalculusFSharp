@@ -1,4 +1,4 @@
-﻿module LambdaCalculus.Hierarchy
+﻿module LambdaCalculus.TextParsing
 
 open LambdaCalculus.Atoms
 
@@ -44,17 +44,4 @@ let untilNotVariable s =
 
     let (res, other) = untilNotVariableInner s []
     List.rev res, other
-
-(*
-// let (|VariableApplied|_|) s =
-//     match s with
-//     | ValidVariable x :: rest ->
-//         Some (x, untilCan rest)
-//     | _ -> None
-//     
-// let (|BlockApplied|_|) s =
-//     match s with
-//     | '('::tl ->
-//         Some (
-*)
 

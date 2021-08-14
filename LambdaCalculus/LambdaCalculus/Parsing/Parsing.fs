@@ -1,11 +1,11 @@
 ﻿module LambdaCalculus.Parsing
 
 open LambdaCalculus.Atoms
-open LambdaCalculus.Hierarchy
+open LambdaCalculus.TextParsing
 open ResultBuilder
 
 
-let rec parse s : Result<Expression, string> =
+let rec parseInner s : Result<Expression, string> =
     match s with
     | [] -> Error "Empty input"
     | [ ValidVariable x ] -> Ok (Variable x)
@@ -40,7 +40,7 @@ and blocksParse s : Result<Expression list, string> =
     | '('::rest ->
         opt {
             let! (left, other) = untilCan rest
-            let! parsed = parse left
+            let! parsed = parseInner left
             let! blocks = blocksParse other
             return parsed :: blocks
         }
@@ -60,7 +60,7 @@ and parseLambda s : Result<Expression * char list, string> =
     | '.'::'('::rest ->
         opt {
             let! (expr, other) = untilCan rest
-            let! parsed = parse expr
+            let! parsed = parseInner expr
             return parsed, other
         }
 
@@ -93,3 +93,11 @@ and parseFlat s : Result<Expression * char list, string> =
         (variableLineApply variableLine (Variable x), other)
         |> Ok
     | err -> Error $"Flat parser encountered unexpected: {err}"
+
+
+
+let parse (s : string) =
+    s
+    |> (fun s -> s.Replace("λ", "\\"))
+    |> List.ofSeq
+    |> parseInner

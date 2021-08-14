@@ -9,9 +9,8 @@
     <Compile Include="Atoms.fs" />
     <Compile Include="OptionBuilder.fs" />
     <Compile Include="Output.fs" />
-    <Compile Include="Parsing\Hierarchy.fs" />
+    <Compile Include="Parsing\TextParsing.fs" />
     <Compile Include="Parsing\Parsing.fs" />
-    <Compile Include="Library.fs" />
   </ItemGroup>
 
 </Project>
