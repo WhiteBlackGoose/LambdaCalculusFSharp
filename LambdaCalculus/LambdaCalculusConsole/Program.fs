@@ -7,27 +7,12 @@ open LambdaCalculus.Output
 open LambdaCalculus.Atoms
 
 
-let res = opt {
-    let! (lambda) = parse "x"
-    return lambda
-}
+let a = Ok (Variable 'x')
+let b = Ok (Variable 'x')
 
-match res with
-| Ok expr ->
-    expr
-    |> sprintLambda
-    |> printfn "%s"
+let equal (a, b) =
+    a.Equals(b)
 
-    expr
-    |> betaReduce
-    |> sprintLambda
-    |> printfn "%s"
-    (*
-    match betaReduce expr with
-    | None -> printfn "%s" "Can't be reduced"
-    | Some reduced ->
-        reduced
-        |> sprintLambda
-        |> printfn "%s"*)
-| Error error ->
-    printfn "%s" error
+printfn $"{a = b}"
+printfn $"{a.Equals(b)}"
+printfn $"{equal(a, b)}"

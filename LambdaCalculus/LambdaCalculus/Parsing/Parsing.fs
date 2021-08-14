@@ -8,7 +8,9 @@ open LambdaCalculus.Utils
 let rec parseInner s : Result<Expression, string> =
     match s with
     | [] -> Error "Empty input"
+
     | [ ValidVariable x ] -> Ok (Variable x)
+
     | other ->
         let rec blockApplier applied blocks =
             match blocks with
@@ -76,12 +78,12 @@ and parseLambda s : Result<Expression * char list, string> =
 
 and parseFlat s : Result<Expression * char list, string> =
     match s with
-    | [ ValidVariable x ] ->
-        (Variable x, [])
-        |> Ok
-    | ValidVariable x::'('::rest | ValidVariable x::'\\'::rest ->
-        (Variable x, rest)
-        |> Ok
+    | [ ValidVariable x ] -> (Variable x, []) |> Ok
+
+    | ValidVariable x::'('::rest -> (Variable x, '('::rest) |> Ok
+
+    | ValidVariable x::'\\'::rest -> (Variable x, '\\'::rest) |> Ok
+
     | ValidVariable x::other ->
         let (variableLine, other) = untilNotVariable other
         let rec variableLineApply (s : char list) res =
@@ -92,6 +94,7 @@ and parseFlat s : Result<Expression * char list, string> =
                 res
         (variableLineApply variableLine (Variable x), other)
         |> Ok
+
     | err -> Error $"Flat parser encountered unexpected: {err}"
 
 
