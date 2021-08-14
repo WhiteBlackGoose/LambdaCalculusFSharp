@@ -1,8 +1,19 @@
+<p align="center">
 <img src="./.github/logo_transparent.png" width="200" />
+</p>
+<p align="center">  
+<h1 align="center">λ calculus in F#</h1>
+</p>
+<p align="center">
+    <i>
+        Library for lambda calculus made purely in and for F#
+    </i>
+</p>
 
-# λ calculus in F#
+The 
+λ-calculus is, at heart, a simple notation for functions and application. The main ideas are applying a function to an argument and forming functions by abstraction. Despite its sparse syntax, the expressiveness and flexibility of the λ-calculus make it a cornucopia of logic and mathematics. [**(c)**](https://plato.stanford.edu/entries/lambda-calculus/)
 
-Fun library for lambda calculus made purely in F#. It has a [web app](https://whiteblackgoose.github.io/LambdaCalculusFSharp/) made for demonstration.
+The library serves no production purpose and made exclusively out of academic interest. It has a [web app](https://whiteblackgoose.github.io/LambdaCalculusFSharp/) made for demonstration.
 
 ## Syntax of λ-calculus
 
