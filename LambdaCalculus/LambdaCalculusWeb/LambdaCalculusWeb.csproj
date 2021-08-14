@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
     <ProjectReference Include="..\LambdaCalculus\LambdaCalculus.fsproj" />
+    -->
   </ItemGroup>
 
 </Project>
