@@ -7,6 +7,9 @@
     border-radius: 6px;
     font-size: 12pt;
 }
+p {
+    font-size: 14pt;
+}
 .submit-button:active {
     background-color: white;
 }
@@ -19,38 +22,92 @@ body {
     width: 60%;
     margin-left: 20%;
 }
+.expr {
+    font-family: monospace;
+}
+.segment {
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+}
+.result {
+    padding: 7px;
+    border: 1px solid white;
+    background: #DDDDFF;
+    border-radius: 6px;
+}
 </style>
 
 <h1>λ calculus calculator</h1>
 
 <p>
-    Welcome to lambda calculus evaluator.
+    Welcome to lambda calculus calculator. See the sources and syntax info in the <a href="https://github.com/WhiteBlackGoose/LambdaCalculusFSharp"><b>GitHub repository</b></a>.
 </p>
 
 
-
+<div class="segment">
+<h3>Parsing</h3>
+<p>
+    Returns internal F# representation of the expression
+</p>
 <input class="neat input-box" @bind=@TextParse style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) Parse(); }" />
 <button class="neat submit-button" @onclick="Parse">Parse</button>
-<p>
-    @ResultParse
+<p class="result">
+    <pre>@ResultParse</pre>
 </p>
+</div>
 
 <br><br><br>
 
+
+<div class="segment">
+<h3>α equivalence</h3>
+<p>
+    Shows whether two expressions are equivalent up to lambdas' parameter names.
+</p>
 <input class="neat input-box" @bind=@TextAlphaEquivalence1 style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
 <input class="neat input-box" @bind=@TextAlphaEquivalence2 style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
 <button class="neat submit-button" @onclick="AlphaEquivalence">α equivalence</button>
-<p>
+<p class="result">
     @ResultAlphaEquivalence
 </p>
+</div>
 
 <br><br><br>
 
+
+<div class="segment">
+<h3>Substitution</h3>
+<p>
+    Performs a substitution of free variables.
+</p>
+<input class="neat input-box" @bind=@TextSubstitution1 style="width: 30%" />
+<input class="neat input-box" @bind=@TextSubstitution2 style="width: 10%" />
+<input class="neat input-box" @bind=@TextSubstitution3 style="width: 30%" />
+<button class="neat submit-button" @onclick="Substitute">Substitute</button>
+<p class="expr result">
+    @ResultSubstitution
+</p>
+</div>
+
+<br><br><br>
+
+
+<div class="segment">
+<h3>β-reduction</h3>
+<p>
+    Tries to reduce an expression until the reduction becomes cyclic.
+</p>
 <input class="neat input-box" @bind=@TextBetaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
 <button class="neat submit-button" @onclick="BetaReduce">β reduction</button>
-<p>
+<p class="expr result">
     @ResultBetaReduce
 </p>
+</div>
+
+<br><br><br><br><br><br>
+<br><br><br><br><br><br>
+<br><br><br><br><br><br>
 
 @using LambdaCalculus
 @code {
@@ -60,7 +117,7 @@ body {
     {
         var parsed = Parsing.parse(TextParse);
         if (parsed.IsOk)
-            ResultParse = parsed.ResultValue.ToString();
+            ResultParse = $"{Output.sprintLambda(parsed.ResultValue)}\n\n{parsed.ResultValue}";
         else
             ResultParse = $"Error: {parsed.ErrorValue}";
     }
@@ -89,5 +146,27 @@ body {
             ResultBetaReduce = Output.sprintLambda(Atoms.betaReduce(parsed.ResultValue));
         else
             ResultBetaReduce = $"Error: {parsed.ErrorValue}";
+    }
+
+    public string TextSubstitution1 = "xxx";
+    public string TextSubstitution2 = "x";
+    public string TextSubstitution3 = "y";
+    public string ResultSubstitution = "";
+    public void Substitute()
+    {
+        if (TextSubstitution2.Length is not 1)
+            ResultSubstitution = "Error: The second field should be a single-char variable.";
+        else
+        {
+            var x = TextSubstitution2[0];
+            var parsed1 = Parsing.parse(TextSubstitution1);
+            var parsed2 = Parsing.parse(TextSubstitution3);
+            if (parsed1.IsOk && parsed2.IsOk)
+                ResultSubstitution = Output.sprintLambda(Atoms.substitute(x, parsed2.ResultValue, parsed1.ResultValue));
+            else if (parsed1.IsError)
+                ResultSubstitution = $"Error: {parsed1.ErrorValue}";
+            else
+                ResultSubstitution = $"Error: {parsed2.ErrorValue}";
+        }
     }
 }
