@@ -3,6 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0-lambda</Version>
+    <Description>λ calculus library made purely in and for F#</Description>
+    <Copyright>WhiteBlackGoose</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/WhiteBlackGoose/LambdaCalculusFSharp</PackageProjectUrl>
+    <PackageIcon>logo_transparent.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/WhiteBlackGoose/LambdaCalculusFSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>fsharp, lambda calculus</PackageTags>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +23,13 @@
     <Compile Include="Output.fs" />
     <Compile Include="Parsing\TextParsing.fs" />
     <Compile Include="Parsing\Parsing.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\.github\logo_transparent.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
