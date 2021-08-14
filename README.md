@@ -1,6 +1,6 @@
-# λ calculus in F#
+<img src="./.github/logo_transparent.png" width="200" />
 
-<img align="right" src="./.github/logo_transparent.png" />
+# λ calculus in F#
 
 Fun library for lambda calculus made purely in F#. It has a [web app](https://whiteblackgoose.github.io/LambdaCalculusFSharp/) made for demonstration.
 
