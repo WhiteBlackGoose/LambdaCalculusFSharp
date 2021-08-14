@@ -26,10 +26,10 @@ jobs:
       run: sed -i 's/<base href="\/" \/>/<base href="\/LambdaCalculusFSharp\/" \/>/g' ./LambdaCalculus/LambdaCalculusWeb/bin/release/net5.0/publish/wwwroot/index.html
       
     - name: Add .nojekyll file
-      run: touch ./LambdaCalculus/LambdaCalculusWeb/bin/release/net6.0/publish/wwwroot/.nojekyll
+      run: touch ./LambdaCalculus/LambdaCalculusWeb/bin/release/net5.0/publish/wwwroot/.nojekyll
       
     - uses: JamesIves/github-pages-deploy-action@4.1.4
       name: gh-pages publish
       with:
         branch: gh-pages
-        folder: ./LambdaCalculus/LambdaCalculusWeb/bin/release/net6.0/publish/wwwroot
+        folder: ./LambdaCalculus/LambdaCalculusWeb/bin/release/net5.0/publish/wwwroot
