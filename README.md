@@ -5,10 +5,11 @@ Fun library for lambda calculus made purely in F#. It has a [web app](https://wh
 ## Syntax of λ-calculus
 
 Rules:
-- Variables are single-character lower-case Latin letters
+- Variables are single-character lower-case Latin letters.
 - Lambda starts with `\`, then is followed by 1 or more variable, then a dot (`.`), then expression.
 Until wrapped with parentheses, the body of a lambda has a lower priority than `()` (e. g. `\x.(x)(y)` is the same as `(\x.x)(y)`).
 - Associativity is left-sided: `xyz` is `(xy)z`.
+- A nested lambda can be shortcuted: `\x.\y.\z.xyz` is the same as `\xyz.xyz`.
 - Symbol `λ` can be used instead of `\`, but is not essential.
 
 Examples:
