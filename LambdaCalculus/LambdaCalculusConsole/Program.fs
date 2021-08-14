@@ -7,12 +7,19 @@ open LambdaCalculus.Output
 open LambdaCalculus.Atoms
 
 
-let a = Ok (Variable 'x')
-let b = Ok (Variable 'x')
+let rec inputAndRespond () =
+    Console.ForegroundColor <- ConsoleColor.White
+    let input = Console.ReadLine()
+    match parse input with
+    | Ok parsed ->
+        Console.ForegroundColor <- ConsoleColor.Green
+        printfn $"Parsed: {sprintLambda parsed}"
+        printfn $"Beta-reduced: {sprintLambda (betaReduce parsed)}"
+        printfn ""
+    | Error error ->
+        Console.ForegroundColor <- ConsoleColor.Red
+        printfn $"Parse error: {error}"
+        printfn ""
+    inputAndRespond ()
 
-let equal (a, b) =
-    a.Equals(b)
-
-printfn $"{a = b}"
-printfn $"{a.Equals(b)}"
-printfn $"{equal(a, b)}"
+inputAndRespond ()
