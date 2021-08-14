@@ -38,20 +38,34 @@ let rec substitute x value expr =
     | Applied (lambda, argument) -> Applied(substitute x value lambda, substitute x value argument)
     | other -> other
 
+let rec complexity = function
+    | Variable _ -> 1
+    | Lambda (_, right) -> complexity right
+    | Applied (left, right) -> complexity left + complexity right
 
 let rec betaReduce expr : Expression =
-    match expr with
-    | Applied(Lambda(x, body), arg) ->
-        substitute x arg body
-        // |> betaReduce
-    | Applied(Variable x, arg) ->
-        Applied(Variable x, betaReduce arg)
-    | Applied(maybeLambda, arg) ->
-        (betaReduce maybeLambda, arg)
-        |> Applied
-        |> betaReduce
-    | Lambda(x, body) -> Lambda(x, betaReduce body)
-    | Variable x -> Variable x
+    let rec betaReduceInner expr : Expression =
+        match expr with
+        | Applied(Lambda(x, body), arg) ->
+            substitute x arg body
+        | Applied(Variable x, arg) ->
+            Applied(Variable x, betaReduceInner arg)
+        | Applied(maybeLambda, arg) ->
+            let nowLambdaOrNot = betaReduceInner maybeLambda
+            match nowLambdaOrNot with
+            | Lambda _ ->
+                (nowLambdaOrNot, betaReduceInner arg)
+                |> Applied
+                |> betaReduceInner
+            | _ -> Applied (nowLambdaOrNot, betaReduceInner arg)
+        | Lambda(x, body) -> Lambda(x, betaReduceInner body)
+        | Variable x -> Variable x
+
+    let reduced = betaReduceInner expr
+    if complexity reduced < complexity expr then
+        betaReduce reduced
+    else
+        expr
 
 let βReduce expr = betaReduce expr
 

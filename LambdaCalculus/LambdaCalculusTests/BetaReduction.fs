@@ -45,7 +45,7 @@ let ``Test β-reduction 8`` () =
 
 [<Fact>]
 let ``Test β-reduction 9`` () =
-    assertBeta @"(\x.xx)(\y.yy)" @"(\y.yy)(\y.yy)"
+    assertBeta @"(\x.xx)(\y.yy)" @"(\x.xx)(\y.yy)"
 
 [<Fact>]
 let ``Test β-reduction 10`` () =
