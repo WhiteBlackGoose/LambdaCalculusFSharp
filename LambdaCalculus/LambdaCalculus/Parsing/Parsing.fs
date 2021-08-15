@@ -58,18 +58,12 @@ and parseLambda s : Result<Expression * char list, string> =
             let! (lambda, other) = parseLambda rest
             return Lambda(x, lambda), other
         }
-        
-    | '.'::'('::rest ->
+
+    | '.'::rest ->
         opt {
             let! (expr, other) = untilCan rest
             let! parsed = parseInner expr
             return parsed, other
-        }
-
-    | '.'::'\\'::rest ->
-        opt {
-            let! (innerLambda, other) = parseLambda rest
-            return innerLambda, other
         }
 
     | '.'::ValidVariable x::rest -> parseFlat (x::rest)

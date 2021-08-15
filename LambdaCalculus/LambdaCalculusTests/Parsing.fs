@@ -97,26 +97,33 @@ let ``Test parser 8`` () =
 let ``Test parser 9`` () =
     equal(
         parse @"\x.x(y)",
-        parse @"(\x.x)(y)"
+        parse @"\x.(x(y))"
         )
 
 [<Fact>]
 let ``Test parser 10`` () =
     equal(
-        parse @"\x.xx(y)",
-        parse @"(\x.xx)(y)"
+        parse @"\x.xx(uy)",
+        parse @"\x.((xx)(uy))"
         )
 
 [<Fact>]
 let ``Test parser 11`` () =
     equal(
         parse @"\xy.xy(y)",
-        parse @"(\x.\y.xy)(y)"
+        parse @"\x.\y.(xy(y))"
         )
    
 [<Fact>]
 let ``Test parser 12`` () =
     equal(
         parse @"\x.x\y.y",
-        parse @"(\x.x)(\y.y)"
+        parse @"\x.(x(\y.y))"
+        )
+
+[<Fact>]
+let ``Test parser 13`` () =
+    equal(
+        parse @"\x.f (x x)",
+        parse @"\x.(f(xx))"
         )
