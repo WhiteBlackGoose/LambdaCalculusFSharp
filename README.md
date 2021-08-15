@@ -52,6 +52,36 @@ of conflicts between it and a local variable in a lambda, it will alpha-convert 
 In the module `LambdaCalculus.Parsing` there is `parse` which takes a string as an argument, and returns a `Result` of
 `Expression` and `string`.
 
+## Basic functions
+
+Taken from [Wikipedia](https://en.wikipedia.org/wiki/Church_encoding#Church_numerals).
+
+#### Numbers
+
+| Number | Lambda  |
+|--------|---------|
+| 0      | `\fx.x` |
+| 1      | `\fx.fx` |
+| 2      | `\fx.f(fx)` |
+| 3      | `\fx.f(f(fx))` |
+| 4      | `\fx.f(f(f(fx)))` |
+| 5      | `\fx.f(f(f(f(fx))))` |
+| 6      | `\fx.f(f(f(f(f(fx)))))` |
+| 7      | `\fx.f(f(f(f(f(f(fx))))))` |
+| 8      | `\fx.f(f(f(f(f(f(f(fx)))))))` |
+| 9      | `\fx.f(f(f(f(f(f(f(f(fx))))))))` |
+
+#### Arithmetic operations
+
+| Operation | Lambda |
+|-----------|--------|
+| Succ      | `\nfx.f(nfx)` |
+| Plus      | `\mnfx.mf(nfx)` |
+| Mult      | `\mnfx.m(nf)x` |
+| Exp       | `\mn.nm` |
+| Pred      | `\nfx.n(\gh.h(gf))(\u.x)(\u.u)` |
+
+
 ## Fun facts
 
 The library is made in pure functional programming. Even the parser has no exceptions, early returns, for-loops.
