@@ -23,6 +23,7 @@
     <Compile Include="Output.fs" />
     <Compile Include="Parsing\TextParsing.fs" />
     <Compile Include="Parsing\Parsing.fs" />
+    <Compile Include="ToCSharp.fs" />
   </ItemGroup>
 
   <ItemGroup>

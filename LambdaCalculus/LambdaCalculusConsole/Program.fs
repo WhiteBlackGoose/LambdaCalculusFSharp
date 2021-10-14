@@ -5,7 +5,7 @@ open LambdaCalculus.Utils
 open LambdaCalculus.Parsing
 open LambdaCalculus.Output
 open LambdaCalculus.Atoms
-
+open LambdaCalculus.ToCSharp
 
 let rec inputAndRespond () =
     Console.ForegroundColor <- ConsoleColor.White
@@ -15,6 +15,7 @@ let rec inputAndRespond () =
         Console.ForegroundColor <- ConsoleColor.Green
         printfn $"Parsed: {sprintLambda parsed}"
         printfn $"Beta-reduced: {sprintLambda (betaReduce parsed)}"
+        printfn $"C# : {toCSharp parsed}"
         printfn ""
     | Error error ->
         Console.ForegroundColor <- ConsoleColor.Red

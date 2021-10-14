@@ -105,6 +105,21 @@ body {
 </p>
 </div>
 
+<br><br><br>
+
+
+<div class="segment">
+<h3>Transpile to C#</h3>
+<p>
+    That's a fun section. Transpiles lambda calculus expression into C# with lambdas and dynamic.
+</p>
+<input class="neat input-box" @bind=@TextToCSharp style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) ToCSharp(); }" />
+<button class="neat submit-button" @onclick="ToCSharp">Transpile to C#</button>
+<p class="expr result">
+    @ResultToCSharp
+</p>
+</div>
+
 <br><br><br><br><br><br>
 <br><br><br><br><br><br>
 <br><br><br><br><br><br>
@@ -170,5 +185,16 @@ body {
             else
                 ResultSubstitution = $"Error: {parsed2.ErrorValue}";
         }
+    }
+
+    public string TextToCSharp = @"(\x.xx)(\y.yy)";
+    public string ResultToCSharp = "";
+    public void ToCSharp()
+    {
+        var parsed = Parsing.parse(TextToCSharp);
+        if (parsed.IsOk)
+            ResultToCSharp = LambdaCalculus.ToCSharp.toCSharp(parsed.ResultValue);
+        else
+            ResultToCSharp = $"Error: {parsed.ErrorValue}";
     }
 }
