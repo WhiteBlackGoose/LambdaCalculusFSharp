@@ -43,10 +43,11 @@ type Expression =
 in `LambdaCalculus.Atoms`.
 
 In the same module `LambdaCalculus.Atoms` there are 
+- `alphaEqual` or `αEqual`: `Expression -> Expression -> bool` compares two expressions up to lambdas parameter names
 - `betaReduce` or `βReduce`: `Expression -> Expression` performs beta-reduction, that is, simplification of an expression
 (starting from bottom, replaces parameters of lambdas in their bodies with the applied expressions)
-- `alphaEqual` or `αEqual`: `Expression -> Expression -> Expression` compares two expressions up to lambdas parameter names
-- `substitute`: `char -> Expression -> Expression -> Expression` replaces the given variable with a given expression. In case
+- `etaReduce` or `ηReduce`: `Expression -> expression` performs eta-reduction, that is, removing redundant abstractions (`\x.ex` -> `e`)
+- `substitute`: `Variable -> Expression -> Expression -> Expression` replaces the given variable with a given expression. In case
 of conflicts between it and a local variable in a lambda, it will alpha-convert the lambda's parameter to a new name.
 
 In the module `LambdaCalculus.Parsing` there is `parse` which takes a string as an argument, and returns a `Result` of
