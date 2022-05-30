@@ -103,7 +103,12 @@ let βReduce = betaReduce
 let rec etaReduce expr : Expression =
     match expr with
     | Lambda (x1, Applied(e, Variable x2)) when x1 = x2 && not (List.contains x1 (freeVariables e)) -> etaReduce e
-    | Lambda (x, body) -> etaReduce (Lambda(x, etaReduce body))
+    | Lambda (x, body) ->
+        let reduced = etaReduce body
+        if reduced = body then
+            Lambda (x, body)
+        else
+            etaReduce (Lambda(x, reduced))
     | Applied (a, b) -> Applied (etaReduce a, etaReduce b)
     | Variable x -> Variable x
 
