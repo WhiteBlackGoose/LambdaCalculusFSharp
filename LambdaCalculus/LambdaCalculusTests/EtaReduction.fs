@@ -50,3 +50,7 @@ let ``Test η-reduction 9`` () =
 [<Fact>]
 let ``Test η-reduction 10`` () =
     assertEta @"\x.(eba(\x.x)c)x" @"(eba(\x.x)c)"
+
+[<Fact>]
+let ``Test η-reduction 11`` () =
+    assertEta @"\b.(\x.ax)(\x.bx)" "a"
