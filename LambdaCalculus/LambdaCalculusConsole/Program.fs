@@ -15,6 +15,7 @@ let rec inputAndRespond () =
         Console.ForegroundColor <- ConsoleColor.Green
         printfn $"Parsed: {sprintLambda parsed}"
         printfn $"Beta-reduced: {sprintLambda (betaReduce parsed)}"
+        printfn $"Eta-reduced: {sprintLambda (etaReduce parsed)}"
         printfn $"C# : {toCSharp parsed}"
         printfn ""
     | Error error ->

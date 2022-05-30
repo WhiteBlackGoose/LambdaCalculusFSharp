@@ -53,9 +53,7 @@ let rec alphaEqual expr other =
         && alphaEqual (substitute y (Variable x) body2) body1
     | _ -> false
 
-let αEqual expr other = alphaEqual expr other
-
-
+let αEqual = alphaEqual
 
 let rec betaReduce expr : Expression =
     let rec betaReduceInner expr : Expression =
@@ -84,6 +82,13 @@ let rec betaReduce expr : Expression =
 
     noRepeatReduction [] expr
 
-let βReduce expr = betaReduce expr
+let βReduce = betaReduce
 
+let rec etaReduce expr : Expression =
+    match expr with
+    | Lambda (x1, Applied(e, Variable x2)) when x1 = x2 -> etaReduce e
+    | Lambda (x, body) -> Lambda(x, etaReduce body)
+    | Applied (a, b) -> Applied (etaReduce a, etaReduce b)
+    | Variable x -> Variable x
 
+let ηReduce = etaReduce

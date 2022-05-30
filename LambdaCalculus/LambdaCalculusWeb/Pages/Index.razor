@@ -1,17 +1,23 @@
 ﻿@page "/"
 
 <style>
+a {
+    color: pink;
+}
 .neat {
     padding: 10px;
     border: 1px solid gray;
     border-radius: 6px;
     font-size: 12pt;
+    font-family: "Overpass Mono";
+    background: 0;
+    color: #fafafa;
 }
 p {
     font-size: 14pt;
 }
 .submit-button:active {
-    background-color: white;
+    background-color: #2F2F2F;
 }
 .submit-button {
     cursor: pointer;
@@ -19,11 +25,11 @@ p {
     padding-right: 10px;
 }
 body {
-    width: 60%;
-    margin-left: 20%;
-}
-.expr {
-    font-family: monospace;
+    width: 50%;
+    margin-left: 25%;
+    font-family: "Overpass Mono";
+    background: #1F1F1F;
+    color: #fafafa;
 }
 .segment {
     padding: 10px;
@@ -33,10 +39,12 @@ body {
 .result {
     padding: 7px;
     border: 1px solid white;
-    background: #DDDDFF;
+    background: darkviolet;
     border-radius: 6px;
 }
 </style>
+
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
 
 <h1>λ calculus calculator</h1>
 
@@ -96,12 +104,26 @@ body {
 <div class="segment">
 <h3>β-reduction</h3>
 <p>
-    Tries to reduce an expression until the reduction becomes cyclic.
+    Tries to β-reduce an expression until the reduction becomes cyclic.
 </p>
 <input class="neat input-box" @bind=@TextBetaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
 <button class="neat submit-button" @onclick="BetaReduce">β reduction</button>
 <p class="expr result">
     @ResultBetaReduce
+</p>
+</div>
+
+<br><br><br>
+
+<div class="segment">
+<h3>η-reduction</h3>
+<p>
+    η-reduces the given expression (by replacing redundant abstractions: \x.ex -> e).
+</p>
+<input class="neat input-box" @bind=@TextEtaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) EtaReduce(); }" />
+<button class="neat submit-button" @onclick="EtaReduce">η reduction</button>
+<p class="expr result">
+    @ResultEtaReduce
 </p>
 </div>
 
@@ -163,6 +185,17 @@ body {
             ResultBetaReduce = Output.sprintLambda(Atoms.betaReduce(parsed.ResultValue));
         else
             ResultBetaReduce = $"Error: {parsed.ErrorValue}";
+    }
+
+    public string TextEtaReduce = @"\yx.ex";
+    public string ResultEtaReduce = "";
+    public void EtaReduce()
+    {
+        var parsed = Parsing.parse(TextEtaReduce);
+        if (parsed.IsOk)
+            ResultEtaReduce = Output.sprintLambda(Atoms.etaReduce(parsed.ResultValue));
+        else
+            ResultEtaReduce = $"Error: {parsed.ErrorValue}";
     }
 
     public string TextSubstitution1 = "xxx";
