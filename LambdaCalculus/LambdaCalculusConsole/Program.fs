@@ -14,7 +14,11 @@ let rec inputAndRespond () =
     | Ok parsed ->
         Console.ForegroundColor <- ConsoleColor.Green
         printfn $"Parsed: {sprintLambda parsed}"
-        printfn $"Beta-reduced: {sprintLambda (betaReduce parsed)}"
+        match betaReduce parsed with
+        | MayTerminate expr ->
+            printfn $"Beta-reduced: {sprintLambda expr}"
+        | NeverTerminates ->
+            printfn $"Can't beta reduce: never terminates"
         printfn $"Eta-reduced: {sprintLambda (etaReduce parsed)}"
         printfn $"C# : {toCSharp parsed}"
         printfn ""

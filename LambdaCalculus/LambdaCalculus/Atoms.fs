@@ -10,6 +10,14 @@ type Expression =
     | Lambda of Head : Variable * Body : Expression
     | Applied of Lambda : Expression * Argument : Expression
 
+type ReductionResult =
+    | MayTerminate of Expression
+    | NeverTerminates
+
+let mapRedRes (f : Expression -> Expression) = function
+    | MayTerminate expr -> MayTerminate (f expr)
+    | NeverTerminates -> NeverTerminates
+
 
 let rec freeVariables = function
     | Variable x -> [ x ]
@@ -55,7 +63,13 @@ let rec alphaEqual expr other =
 
 let αEqual = alphaEqual
 
-let rec betaReduce expr : Expression =
+let rec hasRedex = function
+    | Applied (Lambda _, _) -> true
+    | Applied (a, b) -> hasRedex a || hasRedex b
+    | Lambda (_, body) -> hasRedex body
+    | Variable _ -> false
+
+let rec betaReduce expr : ReductionResult =
     let rec betaReduceInner expr : Expression =
         match expr with
         | Applied(Lambda(x, body), arg) ->
@@ -75,8 +89,10 @@ let rec betaReduce expr : Expression =
 
     let rec noRepeatReduction encountered expr =
         let reduced = betaReduceInner expr
-        if List.exists (alphaEqual reduced) encountered then
-            expr
+        if hasRedex reduced |> not then
+            MayTerminate reduced
+        else if List.exists (alphaEqual reduced) encountered then
+            NeverTerminates
         else
             noRepeatReduction (reduced::encountered) reduced
 
@@ -86,9 +102,13 @@ let βReduce = betaReduce
 
 let rec etaReduce expr : Expression =
     match expr with
-    | Lambda (x1, Applied(e, Variable x2)) when x1 = x2 -> etaReduce e
+    | Lambda (x1, Applied(e, Variable x2)) when x1 = x2 && not (List.contains x1 (freeVariables e)) -> etaReduce e
     | Lambda (x, body) -> Lambda(x, etaReduce body)
     | Applied (a, b) -> Applied (etaReduce a, etaReduce b)
     | Variable x -> Variable x
 
 let ηReduce = etaReduce
+
+let betaEtaReduce expr = expr |> betaReduce |> mapRedRes etaReduce
+
+let βηReduce = betaEtaReduce

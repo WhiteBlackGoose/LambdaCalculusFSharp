@@ -31,3 +31,22 @@ let ``Test η-reduction 4`` () =
 let ``Test η-reduction 5`` () =
     assertEta @"\yx.ex" "\y.e"
 
+[<Fact>]
+let ``Test η-reduction 6`` () =
+    assertEta @"(\x.xx)(\y.yy)" "(\x.xx)(\y.yy)"
+
+[<Fact>]
+let ``Test η-reduction 7`` () =
+    assertEta @"\x.xx" "\x.xx"
+
+[<Fact>]
+let ``Test η-reduction 8`` () =
+    assertEta @"\x.(ebac)x" "ebac"
+
+[<Fact>]
+let ``Test η-reduction 9`` () =
+    assertEta @"\x.(ebaxc)x" @"\x.(ebaxc)x"
+
+[<Fact>]
+let ``Test η-reduction 10`` () =
+    assertEta @"\x.(eba(\x.x)c)x" @"(eba(\x.x)c)"

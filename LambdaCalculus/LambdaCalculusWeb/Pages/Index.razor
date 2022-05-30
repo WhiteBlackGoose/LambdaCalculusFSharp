@@ -129,6 +129,20 @@ body {
 
 <br><br><br>
 
+<div class="segment">
+<h3>βη-reduction</h3>
+<p>
+    Performs βη-reduction.
+</p>
+<input class="neat input-box" @bind=@TextBetaEtaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaEtaReduce(); }" />
+<button class="neat submit-button" @onclick="BetaEtaReduce">βη reduction</button>
+<p class="expr result">
+    @ResultBetaEtaReduce
+</p>
+</div>
+
+<br><br><br>
+
 
 <div class="segment">
 <h3>Transpile to C#</h3>
@@ -182,7 +196,13 @@ body {
     {
         var parsed = Parsing.parse(TextBetaReduce);
         if (parsed.IsOk)
-            ResultBetaReduce = Output.sprintLambda(Atoms.betaReduce(parsed.ResultValue));
+        {
+            var reduced = Atoms.betaReduce(parsed.ResultValue);
+            if (reduced is Atoms.ReductionResult.MayTerminate mt)
+                ResultBetaReduce = Output.sprintLambda(mt.Item);
+            else
+                ResultBetaReduce = "Cannot β-reduce: never terminates.";
+        }
         else
             ResultBetaReduce = $"Error: {parsed.ErrorValue}";
     }
@@ -196,6 +216,23 @@ body {
             ResultEtaReduce = Output.sprintLambda(Atoms.etaReduce(parsed.ResultValue));
         else
             ResultEtaReduce = $"Error: {parsed.ErrorValue}";
+    }
+
+    public string TextBetaEtaReduce = @"(\yx.yx)x";
+    public string ResultBetaEtaReduce = "";
+    public void BetaEtaReduce()
+    {
+        var parsed = Parsing.parse(TextBetaEtaReduce);
+        if (parsed.IsOk)
+        {
+            var reduced = Atoms.betaEtaReduce(parsed.ResultValue);
+            if (reduced is Atoms.ReductionResult.MayTerminate mt)
+                ResultBetaEtaReduce = Output.sprintLambda(mt.Item);
+            else
+                ResultBetaEtaReduce = "Cannot βη-reduce: never terminates.";
+        }
+        else
+            ResultBetaEtaReduce = $"Error: {parsed.ErrorValue}";
     }
 
     public string TextSubstitution1 = "xxx";

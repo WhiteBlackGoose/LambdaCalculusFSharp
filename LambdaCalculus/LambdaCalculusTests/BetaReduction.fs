@@ -7,9 +7,21 @@ open Xunit
 let assertBeta old _new =
     match parse old, parse _new with
     | (Ok old, Ok _new) ->
-        Assert.Equal(_new, βReduce old)
+        match βReduce old with
+        | MayTerminate r -> Assert.Equal(_new, r)
+        | NeverTerminates -> Assert.False(true)
     | _ ->
         Assert.False(true)
+
+let assertBetaNeverTerminates old =
+    match parse old with
+    | Ok old ->
+        match βReduce old with
+        | MayTerminate _ -> Assert.False(true)
+        | NeverTerminates -> Assert.False(false)
+    | _ ->
+        Assert.False(true)
+
 
 [<Fact>]
 let ``Test β-reduction 1`` () =
@@ -44,13 +56,13 @@ let ``Test β-reduction 8`` () =
     assertBeta @"(\x.xxx)abcd" "aaabcd"
 
 [<Fact>]
-let ``Test β-reduction 9`` () =
-    assertBeta @"(\x.xx)(\y.yy)" @"(\y.yy)(\y.yy)"
-
-[<Fact>]
 let ``Test β-reduction 10`` () =
     assertBeta @"(\x.xxx)(\x.x)" @"\x.x"
 
 [<Fact>]
 let ``Test β-reduction 11`` () =
     assertBeta @"(\x.xxx)(yz)" @"yz(yz)(yz)"
+
+[<Fact>]
+let ``Test β-reduction never halts 1`` () =
+    assertBetaNeverTerminates @"(\x.xx)(\y.yy)"
