@@ -63,6 +63,15 @@ let rec alphaEqual expr other =
 
 let αEqual = alphaEqual
 
+let rec alphaSubexpression sub expr =
+    if alphaEqual expr sub then
+        true
+    else
+        match expr with
+        | Lambda (x, body) -> not (List.contains x (freeVariables sub)) && alphaSubexpression sub body
+        | Applied (a, b) -> alphaSubexpression sub a || alphaSubexpression sub b
+        | _ -> false
+
 let rec hasRedex = function
     | Applied (Lambda _, _) -> true
     | Applied (a, b) -> hasRedex a || hasRedex b
@@ -92,6 +101,8 @@ let rec betaReduce expr : ReductionResult =
         if hasRedex reduced |> not then
             MayTerminate reduced
         else if List.exists (alphaEqual reduced) encountered then
+            NeverTerminates
+        else if List.exist (fun sub -> alphaSubexpression sub reduced) encountered then
             NeverTerminates
         else
             noRepeatReduction (reduced::encountered) reduced
