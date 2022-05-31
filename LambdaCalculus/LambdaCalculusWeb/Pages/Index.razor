@@ -8,13 +8,19 @@ a {
     padding: 10px;
     border: 1px solid gray;
     border-radius: 6px;
-    font-size: 12pt;
+    font-size: 14pt;
     font-family: "Overpass Mono";
     background: 0;
     color: #fafafa;
 }
 p {
-    font-size: 14pt;
+    font-size: 16pt;
+}
+h3 {
+    font-size: 18pt;
+}
+h1 {
+    font-size: 20pt;
 }
 .submit-button:active {
     background-color: #2F2F2F;
@@ -24,15 +30,36 @@ p {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+@@media (min-width: 768px) {
+    body {
+        width: 768px;
+    }
+}
+
+@@media (min-width: 992px) {
+    body {
+        width: 940px;
+    }
+}
+
+@@media (min-width: 1200px) {
+    body {
+        width: 1140px;
+    }
+}
+
+
 body {
-    width: 50%;
-    margin-left: 25%;
+    margin-top: 50px;
+    margin-right: auto;
+    margin-left: auto;
     font-family: "Overpass Mono";
     background: #1F1F1F;
     color: #fafafa;
 }
 .segment {
-    padding: 10px;
+    padding: 30px;
     border: 1px solid lightgray;
     border-radius: 6px;
 }
