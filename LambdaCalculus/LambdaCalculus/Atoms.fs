@@ -102,7 +102,7 @@ let rec betaReduce expr : ReductionResult =
             MayTerminate reduced
         else if List.exists (alphaEqual reduced) encountered then
             NeverTerminates
-        else if List.exist (fun sub -> alphaSubexpression sub reduced) encountered then
+        else if List.exists (fun sub -> alphaSubexpression sub reduced) encountered then
             NeverTerminates
         else
             noRepeatReduction (reduced::encountered) reduced
