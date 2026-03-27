@@ -31,10 +31,10 @@ jobs:
 
       - name: Add .nojekyll file
         run: |
-          touch ./LambdaCalculus/LambdaCalculusWeb/bin/Release/net9.0/browser-wasm/publish/wwwroot/.nojekyll
+          touch ./LambdaCalculus/LambdaCalculusWeb/bin/Release/net9/publish/wwwroot/.nojekyll
 
       - name: gh-pages publish
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: ./LambdaCalculus/LambdaCalculusWeb/bin/Release/net9.0/browser-wasm/publish/wwwroot
+          folder: ./LambdaCalculus/LambdaCalculusWeb/bin/Release/net9/publish/wwwroot
