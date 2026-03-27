@@ -25,7 +25,7 @@ let rec freeVariables = function
         freeVariables body
         |> listRemove y
     | Applied (left, right) ->
-        List.append (freeVariables left) (freeVariables right)
+        List.append (freeVariables left) (freeVariables right) |> List.distinct
     
 let newVariable oldOnes =
     VariableAlphabet
@@ -39,8 +39,9 @@ let rec substitute x value expr =
     | Lambda (x', body) when x' = x -> Lambda (x', body)
     | Lambda (y, body) when y <> x ->
         let valueFreeVars = freeVariables value
-        if List.contains y valueFreeVars then
-            let z = newVariable (List.append valueFreeVars (freeVariables body))
+        let bodyFreeVars = freeVariables body
+        if List.contains y valueFreeVars && List.contains x bodyFreeVars then
+            let z = newVariable (List.append valueFreeVars bodyFreeVars)
             let newBody = substitute y (Variable z) body
             Lambda(z, substitute x value newBody)
         else
@@ -81,18 +82,13 @@ let rec hasRedex = function
 let rec betaReduce expr : ReductionResult =
     let rec betaReduceInner expr : Expression =
         match expr with
-        | Applied(Lambda(x, body), arg) ->
-            substitute x arg body
-        | Applied(Variable x, arg) ->
-            Applied(Variable x, betaReduceInner arg)
-        | Applied(maybeLambda, arg) ->
-            let nowLambdaOrNot = betaReduceInner maybeLambda
-            match nowLambdaOrNot with
-            | Lambda _ ->
-                (nowLambdaOrNot, betaReduceInner arg)
-                |> Applied
-                |> betaReduceInner
-            | _ -> Applied (nowLambdaOrNot, betaReduceInner arg)
+        | Applied(expr, value) ->
+            match betaReduceInner expr with
+            | Lambda(x, body) ->
+                printfn "HELL OWLD "
+                printfn "%A %A %A" x value body
+                betaReduceInner (substitute x value body)
+            | other -> Applied(other, betaReduceInner value)
         | Lambda(x, body) -> Lambda(x, betaReduceInner body)
         | Variable x -> Variable x
 
