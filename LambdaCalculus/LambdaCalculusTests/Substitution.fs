@@ -36,3 +36,7 @@ let ``Test substitute 5`` () =
 [<Fact>]
 let ``Test substitute 6`` () =
     assertSub @"\x.xy" 'y' "x" @"\z.zx"
+
+[<Fact>]
+let ``Test substitute issue #5`` () =
+    assertSub @"\x.xx" 'y' "x" @"\x.xx"

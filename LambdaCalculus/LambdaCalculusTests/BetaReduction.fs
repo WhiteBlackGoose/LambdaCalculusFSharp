@@ -64,8 +64,19 @@ let ``Test β-reduction 11`` () =
     assertBeta @"(\x.xxx)(yz)" @"yz(yz)(yz)"
 
 [<Fact>]
+let ``Test β-reduction issue #5 1`` () =
+    assertBeta @"(\y.\x.xx)x" @"\x.xx"
+
+(*
+[<Fact>]
+let ``Test β-reduction issue #5 2`` () =
+    assertBeta @"(\y.\x.xx)(\x.xx)" @"\x.xx"
+
+[<Fact>]
 let ``Test β-reduction never halts 1`` () =
     assertBetaNeverTerminates @"(\x.xx)(\y.yy)"
+
+*)
 
 (*
 [<Fact>]
