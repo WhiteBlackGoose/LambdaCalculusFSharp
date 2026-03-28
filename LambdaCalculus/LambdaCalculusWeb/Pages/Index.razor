@@ -87,6 +87,35 @@ body {
     max-width: 200px;
     height: auto;
 }
+.qr-code img:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+.qr-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+.qr-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.qr-modal img {
+    max-width: 80vw;
+    max-height: 80vh;
+    border: 2px solid white;
+}
+.qr-modal p {
+    color: white;
+    margin-top: 20px;
+}
 </style>
 
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
@@ -209,9 +238,18 @@ body {
     <h3>Share your calculations!</h3>
     <p>Scan the QR code below to share these inputs with others:</p>
     <div class="qr-code">
-        <img src="@QrCodeImage" alt="QR Code" />
+        <img src="@QrCodeImage" alt="QR Code" @onclick="() => ShowQrModal = true" />
+        <p style="font-size: 12pt; margin-top: 10px;">(click to enlarge)</p>
     </div>
 </div>
+
+@if (ShowQrModal)
+{
+    <div class="qr-modal show" @onclick="() => ShowQrModal = false">
+        <img src="@QrCodeImage" alt="QR Code" />
+        <p>(click to close)</p>
+    </div>
+}
 
 
 @using LambdaCalculus
@@ -336,6 +374,7 @@ body {
     }
 
     private string QrCodeImage = "";
+    private bool ShowQrModal = false;
 
     private Dictionary<string, string> GetCurrentInputs() => new()
     {
