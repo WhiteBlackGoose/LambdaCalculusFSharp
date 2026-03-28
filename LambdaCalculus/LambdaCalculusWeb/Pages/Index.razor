@@ -2,6 +2,7 @@
 @using System.Text.Json
 @using System.IO
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <style>
 a {
@@ -82,6 +83,10 @@ body {
 .qr-code {
     margin-top: 20px;
 }
+.qr-code img {
+    max-width: 200px;
+    height: auto;
+}
 </style>
 
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
@@ -98,7 +103,7 @@ body {
 <p>
     Returns internal F# representation of the expression
 </p>
-<input class="neat input-box" @bind:get="TextParse" @bind:set="v => { TextParse = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) Parse(); }" />
+<input class="neat input-box" @bind:get="TextParse" @bind:set="async v => { TextParse = v; await UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) Parse(); }" />
 <button class="neat submit-button" @onclick="Parse">Parse</button>
 <p class="result">
     <pre>@ResultParse</pre>
@@ -113,8 +118,8 @@ body {
 <p>
     Shows whether two expressions are equivalent up to lambdas' parameter names.
 </p>
-<input class="neat input-box" @bind:get="TextAlphaEquivalence1" @bind:set="v => { TextAlphaEquivalence1 = v; UpdateUrl(); }" style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
-<input class="neat input-box" @bind:get="TextAlphaEquivalence2" @bind:set="v => { TextAlphaEquivalence2 = v; UpdateUrl(); }" style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
+<input class="neat input-box" @bind:get="TextAlphaEquivalence1" @bind:set="async v => { TextAlphaEquivalence1 = v; await UpdateUrl(); }" style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
+<input class="neat input-box" @bind:get="TextAlphaEquivalence2" @bind:set="async v => { TextAlphaEquivalence2 = v; await UpdateUrl(); }" style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
 <button class="neat submit-button" @onclick="AlphaEquivalence">α equivalence</button>
 <p class="result">
     @ResultAlphaEquivalence
@@ -129,9 +134,9 @@ body {
 <p>
     Performs a substitution of free variables.
 </p>
-<input class="neat input-box" @bind:get="TextSubstitution1" @bind:set="v => { TextSubstitution1 = v; UpdateUrl(); }" style="width: 30%" />
-<input class="neat input-box" @bind:get="TextSubstitution2" @bind:set="v => { TextSubstitution2 = v; UpdateUrl(); }" style="width: 10%" />
-<input class="neat input-box" @bind:get="TextSubstitution3" @bind:set="v => { TextSubstitution3 = v; UpdateUrl(); }" style="width: 30%" />
+<input class="neat input-box" @bind:get="TextSubstitution1" @bind:set="async v => { TextSubstitution1 = v; await UpdateUrl(); }" style="width: 30%" />
+<input class="neat input-box" @bind:get="TextSubstitution2" @bind:set="async v => { TextSubstitution2 = v; await UpdateUrl(); }" style="width: 10%" />
+<input class="neat input-box" @bind:get="TextSubstitution3" @bind:set="async v => { TextSubstitution3 = v; await UpdateUrl(); }" style="width: 30%" />
 <button class="neat submit-button" @onclick="Substitute">Substitute</button>
 <p class="expr result">
     @ResultSubstitution
@@ -146,7 +151,7 @@ body {
 <p>
     Tries to β-reduce an expression until the reduction becomes cyclic.
 </p>
-<input class="neat input-box" @bind:get="TextBetaReduce" @bind:set="v => { TextBetaReduce = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
+<input class="neat input-box" @bind:get="TextBetaReduce" @bind:set="async v => { TextBetaReduce = v; await UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
 <button class="neat submit-button" @onclick="BetaReduce">β reduction</button>
 <p class="expr result">
     @ResultBetaReduce
@@ -160,7 +165,7 @@ body {
 <p>
     η-reduces the given expression (by replacing redundant abstractions: \x.ex -> e).
 </p>
-<input class="neat input-box" @bind:get="TextEtaReduce" @bind:set="v => { TextEtaReduce = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) EtaReduce(); }" />
+<input class="neat input-box" @bind:get="TextEtaReduce" @bind:set="async v => { TextEtaReduce = v; await UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) EtaReduce(); }" />
 <button class="neat submit-button" @onclick="EtaReduce">η reduction</button>
 <p class="expr result">
     @ResultEtaReduce
@@ -174,7 +179,7 @@ body {
 <p>
     Performs βη-reduction.
 </p>
-<input class="neat input-box" @bind:get="TextBetaEtaReduce" @bind:set="v => { TextBetaEtaReduce = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaEtaReduce(); }" />
+<input class="neat input-box" @bind:get="TextBetaEtaReduce" @bind:set="async v => { TextBetaEtaReduce = v; await UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaEtaReduce(); }" />
 <button class="neat submit-button" @onclick="BetaEtaReduce">βη reduction</button>
 <p class="expr result">
     @ResultBetaEtaReduce
@@ -189,7 +194,7 @@ body {
 <p>
     That's a fun section. Transpiles lambda calculus expression into C# with lambdas and dynamic.
 </p>
-<input class="neat input-box" @bind:get="TextToCSharp" @bind:set="v => { TextToCSharp = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) ToCSharp(); }" />
+<input class="neat input-box" @bind:get="TextToCSharp" @bind:set="async v => { TextToCSharp = v; await UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) ToCSharp(); }" />
 <button class="neat submit-button" @onclick="ToCSharp">Transpile to C#</button>
 <p class="expr result">
     @ResultToCSharp
@@ -359,20 +364,23 @@ body {
                      .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-    private void UpdateUrl()
+    private async Task UpdateUrl()
     {
         var nonDefault = GetNonDefaultInputs();
+        string newUrl;
         if (nonDefault.Count > 0)
         {
             var json = JsonSerializer.Serialize(nonDefault);
             var base64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json));
             var encoded = Uri.EscapeDataString(base64);
-            Nav.NavigateTo($"?d={encoded}", forceLoad: false);
+            newUrl = $"?d={encoded}";
         }
         else
         {
-            Nav.NavigateTo("/", forceLoad: false);
+            newUrl = "/";
         }
+        
+        await JS.InvokeVoidAsync("eval", $"window.history.pushState(null, '', '{newUrl}')");
         GenerateQrCode();
     }
 
