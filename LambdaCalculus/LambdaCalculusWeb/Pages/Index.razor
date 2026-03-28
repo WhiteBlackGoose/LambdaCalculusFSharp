@@ -1,4 +1,7 @@
-﻿@page "/"
+@page "/"
+@using System.Text.Json
+@using System.IO
+@inject NavigationManager Nav
 
 <style>
 a {
@@ -69,6 +72,16 @@ body {
     background: darkviolet;
     border-radius: 6px;
 }
+.qr-section {
+    padding: 30px;
+    border: 1px solid lightgray;
+    border-radius: 6px;
+    text-align: center;
+    margin-top: 50px;
+}
+.qr-code {
+    margin-top: 20px;
+}
 </style>
 
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
@@ -85,7 +98,7 @@ body {
 <p>
     Returns internal F# representation of the expression
 </p>
-<input class="neat input-box" @bind=@TextParse style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) Parse(); }" />
+<input class="neat input-box" @bind:get="TextParse" @bind:set="v => { TextParse = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) Parse(); }" />
 <button class="neat submit-button" @onclick="Parse">Parse</button>
 <p class="result">
     <pre>@ResultParse</pre>
@@ -100,8 +113,8 @@ body {
 <p>
     Shows whether two expressions are equivalent up to lambdas' parameter names.
 </p>
-<input class="neat input-box" @bind=@TextAlphaEquivalence1 style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
-<input class="neat input-box" @bind=@TextAlphaEquivalence2 style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
+<input class="neat input-box" @bind:get="TextAlphaEquivalence1" @bind:set="v => { TextAlphaEquivalence1 = v; UpdateUrl(); }" style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
+<input class="neat input-box" @bind:get="TextAlphaEquivalence2" @bind:set="v => { TextAlphaEquivalence2 = v; UpdateUrl(); }" style="width: 35%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) AlphaEquivalence(); }" />
 <button class="neat submit-button" @onclick="AlphaEquivalence">α equivalence</button>
 <p class="result">
     @ResultAlphaEquivalence
@@ -116,9 +129,9 @@ body {
 <p>
     Performs a substitution of free variables.
 </p>
-<input class="neat input-box" @bind=@TextSubstitution1 style="width: 30%" />
-<input class="neat input-box" @bind=@TextSubstitution2 style="width: 10%" />
-<input class="neat input-box" @bind=@TextSubstitution3 style="width: 30%" />
+<input class="neat input-box" @bind:get="TextSubstitution1" @bind:set="v => { TextSubstitution1 = v; UpdateUrl(); }" style="width: 30%" />
+<input class="neat input-box" @bind:get="TextSubstitution2" @bind:set="v => { TextSubstitution2 = v; UpdateUrl(); }" style="width: 10%" />
+<input class="neat input-box" @bind:get="TextSubstitution3" @bind:set="v => { TextSubstitution3 = v; UpdateUrl(); }" style="width: 30%" />
 <button class="neat submit-button" @onclick="Substitute">Substitute</button>
 <p class="expr result">
     @ResultSubstitution
@@ -133,7 +146,7 @@ body {
 <p>
     Tries to β-reduce an expression until the reduction becomes cyclic.
 </p>
-<input class="neat input-box" @bind=@TextBetaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
+<input class="neat input-box" @bind:get="TextBetaReduce" @bind:set="v => { TextBetaReduce = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaReduce(); }" />
 <button class="neat submit-button" @onclick="BetaReduce">β reduction</button>
 <p class="expr result">
     @ResultBetaReduce
@@ -147,7 +160,7 @@ body {
 <p>
     η-reduces the given expression (by replacing redundant abstractions: \x.ex -> e).
 </p>
-<input class="neat input-box" @bind=@TextEtaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) EtaReduce(); }" />
+<input class="neat input-box" @bind:get="TextEtaReduce" @bind:set="v => { TextEtaReduce = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) EtaReduce(); }" />
 <button class="neat submit-button" @onclick="EtaReduce">η reduction</button>
 <p class="expr result">
     @ResultEtaReduce
@@ -161,7 +174,7 @@ body {
 <p>
     Performs βη-reduction.
 </p>
-<input class="neat input-box" @bind=@TextBetaEtaReduce style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaEtaReduce(); }" />
+<input class="neat input-box" @bind:get="TextBetaEtaReduce" @bind:set="v => { TextBetaEtaReduce = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) BetaEtaReduce(); }" />
 <button class="neat submit-button" @onclick="BetaEtaReduce">βη reduction</button>
 <p class="expr result">
     @ResultBetaEtaReduce
@@ -176,7 +189,7 @@ body {
 <p>
     That's a fun section. Transpiles lambda calculus expression into C# with lambdas and dynamic.
 </p>
-<input class="neat input-box" @bind=@TextToCSharp style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) ToCSharp(); }" />
+<input class="neat input-box" @bind:get="TextToCSharp" @bind:set="v => { TextToCSharp = v; UpdateUrl(); }" style="width: 50%" @onkeypress="args => { if (args.Key[0] is 'E' /*enter*/ ) ToCSharp(); }" />
 <button class="neat submit-button" @onclick="ToCSharp">Transpile to C#</button>
 <p class="expr result">
     @ResultToCSharp
@@ -187,11 +200,33 @@ body {
 <br><br><br><br><br><br>
 <br><br><br><br><br><br>
 
+<div class="qr-section">
+    <h3>Share your calculations!</h3>
+    <p>Scan the QR code below to share these inputs with others:</p>
+    <div class="qr-code">
+        <img src="@QrCodeImage" alt="QR Code" />
+    </div>
+</div>
+
 
 @using LambdaCalculus
 
 @code {
-    public string TextParse = @"(\x.xx)y";
+    private static readonly Dictionary<string, string> Defaults = new()
+    {
+        ["parsing"] = @"(\x.xx)y",
+        ["alpha1"] = @"\x.xx",
+        ["alpha2"] = @"\y.yy",
+        ["betaReduce"] = @"(\x.xx)(\y.y)z",
+        ["etaReduce"] = @"\yx.ex",
+        ["betaEtaReduce"] = @"(\yx.yx)x",
+        ["substitute1"] = "xxx",
+        ["substitute2"] = "x",
+        ["substitute3"] = "y",
+        ["toCSharp"] = @"(\x.xx)(\y.yy)"
+    };
+
+    public string TextParse { get; set; } = Defaults["parsing"];
     public string ResultParse = "";
     public void Parse()
     {
@@ -202,8 +237,8 @@ body {
             ResultParse = $"Error: {parsed.ErrorValue}";
     }
 
-    public string TextAlphaEquivalence1 = @"\x.xx";
-    public string TextAlphaEquivalence2 = @"\y.yy";
+    public string TextAlphaEquivalence1 { get; set; } = Defaults["alpha1"];
+    public string TextAlphaEquivalence2 { get; set; } = Defaults["alpha2"];
     public string ResultAlphaEquivalence = "";
     public void AlphaEquivalence()
     {
@@ -217,7 +252,7 @@ body {
             ResultAlphaEquivalence = $"Error: {parsed2.ErrorValue}";
     }
 
-    public string TextBetaReduce = @"(\x.xx)(\y.y)z";
+    public string TextBetaReduce { get; set; } = Defaults["betaReduce"];
     public string ResultBetaReduce = "";
     public void BetaReduce()
     {
@@ -234,7 +269,7 @@ body {
             ResultBetaReduce = $"Error: {parsed.ErrorValue}";
     }
 
-    public string TextEtaReduce = @"\yx.ex";
+    public string TextEtaReduce { get; set; } = Defaults["etaReduce"];
     public string ResultEtaReduce = "";
     public void EtaReduce()
     {
@@ -245,7 +280,7 @@ body {
             ResultEtaReduce = $"Error: {parsed.ErrorValue}";
     }
 
-    public string TextBetaEtaReduce = @"(\yx.yx)x";
+    public string TextBetaEtaReduce { get; set; } = Defaults["betaEtaReduce"];
     public string ResultBetaEtaReduce = "";
     public void BetaEtaReduce()
     {
@@ -262,9 +297,9 @@ body {
             ResultBetaEtaReduce = $"Error: {parsed.ErrorValue}";
     }
 
-    public string TextSubstitution1 = "xxx";
-    public string TextSubstitution2 = "x";
-    public string TextSubstitution3 = "y";
+    public string TextSubstitution1 { get; set; } = Defaults["substitute1"];
+    public string TextSubstitution2 { get; set; } = Defaults["substitute2"];
+    public string TextSubstitution3 { get; set; } = Defaults["substitute3"];
     public string ResultSubstitution = "";
     public void Substitute()
     {
@@ -284,7 +319,7 @@ body {
         }
     }
 
-    public string TextToCSharp = @"(\x.xx)(\y.yy)";
+    public string TextToCSharp { get; set; } = Defaults["toCSharp"];
     public string ResultToCSharp = "";
     public void ToCSharp()
     {
@@ -293,5 +328,107 @@ body {
             ResultToCSharp = LambdaCalculus.ToCSharp.toCSharp(parsed.ResultValue);
         else
             ResultToCSharp = $"Error: {parsed.ErrorValue}";
+    }
+
+    private string QrCodeImage = "";
+
+    private Dictionary<string, string> GetCurrentInputs() => new()
+    {
+        ["parsing"] = TextParse,
+        ["alpha1"] = TextAlphaEquivalence1,
+        ["alpha2"] = TextAlphaEquivalence2,
+        ["betaReduce"] = TextBetaReduce,
+        ["etaReduce"] = TextEtaReduce,
+        ["betaEtaReduce"] = TextBetaEtaReduce,
+        ["substitute1"] = TextSubstitution1,
+        ["substitute2"] = TextSubstitution2,
+        ["substitute3"] = TextSubstitution3,
+        ["toCSharp"] = TextToCSharp
+    };
+
+    private bool HasNonDefaultInputs()
+    {
+        var inputs = GetCurrentInputs();
+        return inputs.Any(kvp => Defaults.TryGetValue(kvp.Key, out var def) && kvp.Value != def);
+    }
+
+    private Dictionary<string, string> GetNonDefaultInputs()
+    {
+        var inputs = GetCurrentInputs();
+        return inputs.Where(kvp => Defaults.TryGetValue(kvp.Key, out var def) && kvp.Value != def)
+                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    private void UpdateUrl()
+    {
+        var nonDefault = GetNonDefaultInputs();
+        if (nonDefault.Count > 0)
+        {
+            var json = JsonSerializer.Serialize(nonDefault);
+            var base64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(json));
+            var encoded = Uri.EscapeDataString(base64);
+            Nav.NavigateTo($"?d={encoded}", forceLoad: false);
+        }
+        else
+        {
+            Nav.NavigateTo("/", forceLoad: false);
+        }
+        GenerateQrCode();
+    }
+
+    private void LoadFromUrl()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+        
+        if (query.TryGetValue("d", out var encoded) && !string.IsNullOrEmpty(encoded))
+        {
+            try
+            {
+                var base64 = Uri.UnescapeDataString(encoded);
+                var json = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+                var inputs = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                
+                if (inputs != null)
+                {
+                    if (inputs.TryGetValue("parsing", out var parsing)) TextParse = parsing;
+                    if (inputs.TryGetValue("alpha1", out var alpha1)) TextAlphaEquivalence1 = alpha1;
+                    if (inputs.TryGetValue("alpha2", out var alpha2)) TextAlphaEquivalence2 = alpha2;
+                    if (inputs.TryGetValue("betaReduce", out var betaReduce)) TextBetaReduce = betaReduce;
+                    if (inputs.TryGetValue("etaReduce", out var etaReduce)) TextEtaReduce = etaReduce;
+                    if (inputs.TryGetValue("betaEtaReduce", out var betaEtaReduce)) TextBetaEtaReduce = betaEtaReduce;
+                    if (inputs.TryGetValue("substitute1", out var substitute1)) TextSubstitution1 = substitute1;
+                    if (inputs.TryGetValue("substitute2", out var substitute2)) TextSubstitution2 = substitute2;
+                    if (inputs.TryGetValue("substitute3", out var substitute3)) TextSubstitution3 = substitute3;
+                    if (inputs.TryGetValue("toCSharp", out var toCSharp)) TextToCSharp = toCSharp;
+                }
+            }
+            catch
+            {
+            }
+        }
+    }
+
+    private void GenerateQrCode()
+    {
+        try
+        {
+            var url = Nav.Uri;
+            using var qrGenerator = new QRCoder.QRCodeGenerator();
+            using var qrCodeData = qrGenerator.CreateQrCode(url, QRCoder.QRCodeGenerator.ECCLevel.Q);
+            using var qrCode = new QRCoder.PngByteQRCode(qrCodeData);
+            var bytes = qrCode.GetGraphic(20);
+            QrCodeImage = $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
+        }
+        catch
+        {
+            QrCodeImage = "";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        LoadFromUrl();
+        GenerateQrCode();
     }
 }
